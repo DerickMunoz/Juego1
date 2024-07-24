@@ -8,7 +8,7 @@ pg.init()
 #Pantalla o Ventana
 w,h=(1000,600)
 PANTALLA = pg.display.set_mode((w,h))
-FPS = 30
+FPS = 25
 RELOJ = pg.time.Clock()
 # Colores
 COLOR_VIDA = (0,255,0)  # Rojo
@@ -34,15 +34,14 @@ def dibujar_barra_vida(x, y, vida, vida_max):
 #Fondo del juego
 fondo=pg.image.load("Imagenes\\FondoJuego_resized.jpg").convert()
 
+#Personaje 1
 #Imagenes Movimiento
 Mderecha=[pg.image.load('Personajes\\Personaje1\\Derecho1.png'),
           pg.image.load('Personajes\\Personaje1\\Derecho2.png'),
           pg.image.load('Personajes\\Personaje1\\Derecho3.png'),
           pg.image.load('Personajes\\Personaje1\\Derecho4.png')]
 
-SaltoMovimiento= [pg.image.load('Personajes\\Personaje1\\Salto2.png'),
-                  pg.image.load('Personajes\\Personaje1\\Salto3.png'),
-                  pg.image.load('Personajes\\Personaje1\\Salto4.png')]
+SaltoMovimiento= [pg.image.load('Personajes\\Personaje1\\Salto4.png')]
 
 MIzquierda=[pg.image.load('Personajes\\Personaje1\\Izquierdo1.png'),
             pg.image.load('Personajes\\Personaje1\\Izquierdo2.png'),
@@ -55,7 +54,8 @@ framesAtaque = [pg.image.load('Personajes\\Personaje1\\Derecho1.png'),
 
 Quieto = pg.image.load('Personajes\\Personaje1\\Derecho1.png')
 
-
+#Lucas
+FramesLucas = pg.image.load('Personajes\Enemigo1\Spider1.png')
 #Variables
 x=0
 px=50
@@ -91,6 +91,7 @@ def recargarPantalla():
     x-=1
 
     dibujar_barra_vida(50, 50, vida_actual, vida_maxima)
+    PANTALLA.blit(FramesLucas, (600,145))
 
     # Contador de pasos actualizado para todas las direcciones
     if cuentaPasos + 1 >= 6:
@@ -140,12 +141,13 @@ while ejecuta:
         px -= velocidad
         Izquierda = True
         Derecha = False
-    
+    #Tecla Ataque
     elif keys[pg.K_v] and px > 0:
-        px -= velocidad
         Ataque = True
         Izquierda = False 
         Derecha  = False
+
+    
         
 
     #Tecla D-Movimiento a la Izquierda
@@ -154,6 +156,7 @@ while ejecuta:
         Izquierda = False
         Derecha = True
         Ataque = False
+
     #Personaje Quieto
     else:
         Izquierda = False
