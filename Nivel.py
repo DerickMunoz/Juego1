@@ -1,14 +1,14 @@
 import pygame as pg
 import sys
+import random
 
-# Inicializar Pygame
 pg.init()
 
 
 #Pantalla o Ventana
 w,h=(1000,600)
 PANTALLA = pg.display.set_mode((w,h))
-FPS = 25
+FPS = 50
 RELOJ = pg.time.Clock()
 # Colores
 COLOR_VIDA = (0,255,0)  # Rojo
@@ -53,10 +53,19 @@ class Spider:
         self.y = y
         self.cuentaPasos = 0
         self.direccion = 1  # 1 para derecha, -1 para izquierda
-        self.velocidad_animacion = 15  # Controla la velocidad de la animación
+        self.velocidad_animacion = 30  # Controla la velocidad de la animación
         self.contador_animacion = 0
-        self.ancho = 64  # Asume que la imagen tiene 64 píxeles de ancho
-        self.alto = 64  # Asume que la imagen tiene 64 píxeles de alto
+        self.ancho = 200  # Asume que la imagen tiene 64 píxeles de ancho
+        self.alto = 350  # Asume que la imagen tiene 64 píxeles de alto
+        self.rect = pg.Rect(x, y, ancho, alto)
+        self.fragmentos = []
+
+    def actualizar_rect(self):
+        self.rect = pg.Rect(self.x, self.y, self.ancho, self.alto)
+    
+    def lanzar_fragmento(self):
+        fragmento = Fragmento(self.x, self.y)
+        self.fragmentos.append(fragmento)
 
     def mover(self):
         # Movimiento simple de izquierda a derecha
@@ -74,6 +83,51 @@ class Spider:
             self.cuentaPasos = 0
     def obtener_rect(self):
         return pg.Rect(self.x, self.y, self.ancho, self.alto)
+    def actualizar_fragmentos(self, personaje_principal):
+        for fragmento in self.fragmentos:
+            fragmento.mover()
+            if fragmento.colisiona_con(personaje_principal):
+                personaje_principal.vida -= 10  # Reducir la vida del personaje principal
+                self.fragmentos.remove(fragmento)
+class Fragmento:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.velocidad_x = random.randint(-5, 5)
+        self.velocidad_y = random.randint(-5, 5)
+        self.rect = pg.Rect(self.x, self.y, 10, 10)
+
+    def mover(self):
+        self.x += self.velocidad_x
+        self.y += self.velocidad_y
+        self.rect = pg.Rect(self.x, self.y, 10, 10)
+
+    def colisiona_con(self, otro_rect):
+        return self.rect.colliderect(otro_rect)
+class PersonajePrincipal:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.ancho = 40
+        self.alto = 64
+        self.vida = 100
+        self.velocidad = 5
+        self.rect = pg.Rect(x, y, self.ancho, self.alto)
+
+    def mover(self, direccion):
+        if direccion == "izquierda":
+            self.x -= self.velocidad
+        elif direccion == "derecha":
+            self.x += self.velocidad
+        elif direccion == "arriba":
+            self.y -= self.velocidad
+        self.actualizar_rect()
+
+    def actualizar_rect(self):
+        self.rect = pg.Rect(self.x, self.y, self.ancho, self.alto)
+
+    def obtener_rect(self):
+        return self.rect
 
 class ObjetoColision:
     def __init__(self, x, y, ancho, alto, velocidad):
@@ -135,10 +189,13 @@ x=0
 px=50
 py=200
 ancho = 40
+alto = 64
 velocidad = 10
-velocidad_animacion = 50
+velocidad_animacion =400 
 # Crear una instancia del personaje Spider
-spider = Spider(600, 145)
+spider = Spider(650, 120)
+personaje_principal = PersonajePrincipal(50, 200)
+otro_objeto = pg.Rect(120, 120, 30, 30)
 objetos_colision = []
 ancho, alto = 64, 64
 
@@ -198,6 +255,9 @@ ejecuta = True
 # Bucle principal del juego
 while ejecuta:
     RELOJ.tick(FPS)
+    # Actualizar el rectángulo de colisión del Spider
+    spider.actualizar_rect()
+
     if vida_actual <= 0:
         
         print("Has muerto")
@@ -227,7 +287,21 @@ while ejecuta:
                 # Crear un nuevo objeto de colisión
                 nuevo_objeto = ObjetoColision(px + ancho, py + alto // 4 + 40, 10, 40, 10)
                 objetos_colision.append(nuevo_objeto)
-                
+    
+    teclas = pg.key.get_pressed()
+    if teclas[pg.K_a]:
+        personaje_principal.mover("izquierda")
+    if teclas[pg.K_d]:
+        personaje_principal.mover("derecha")
+    if teclas[pg.K_SPACE]:
+        personaje_principal.mover("arriba")  
+
+    spider.actualizar_rect()   
+    # Lógica para lanzar fragmentos de manera aleatoria
+    if random.randint(0, 100) < 5:  # 5% de probabilidad de lanzar un fragmento en cada iteración
+        spider.lanzar_fragmento() 
+    # Actualizar y mover los fragmentos
+    spider.actualizar_fragmentos(personaje_principal)      
 
     # Teclas presionadas
     keys = pg.key.get_pressed()
@@ -289,5 +363,6 @@ while ejecuta:
 
 # Salida del Juego
 pg.quit()
+
    
    
