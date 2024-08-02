@@ -1,24 +1,77 @@
 import pygame as pg
-import sys
-
 # Inicializar Pygame
 pg.init()
 
-# Crear una ventana
-x, y = 1000, 600
-Menu = pg.display.set_mode((x, y))
-pg.display.set_caption("Menu")
+# Crear la ventana de Pygame
+ancho, alto = 1000, 600
+Menu = pg.display.set_mode((ancho, alto))
+pg.display.set_caption("Menú del Juego")
 
 # Cargar la imagen de fondo
-fondo = pg.image.load("Imagenes\\FondoMenu.png").convert()
+fondo = pg.image.load("Imagenes/FondoMenu.png").convert()
 
-# Definir el botón
-boton_color = (0, 255, 0)  # Color verde
-boton_rect = pg.Rect(450, 250, 100, 50)  # Posición y tamaño del botón
+# Cargar la imagen del botón Inicio
+imagen_boton = pg.image.load("Imagenes\\boton inicio.png").convert_alpha()
+boton_rect = imagen_boton.get_rect()
 
-# Crear una instancia de la clase Niveles
 
-# Bucle principal
+# Cargar la imagen del botón Niveles
+imagen_niveles = pg.image.load("Imagenes\\boton_Niveles.png").convert_alpha()
+boton_rect = imagen_boton.get_rect()
+
+# Cargar la imagen del botón Inicio
+imagen_salir = pg.image.load("Imagenes\\Boton_Salir.png").convert_alpha()
+boton_rect = imagen_boton.get_rect()
+
+
+# Calcular las coordenadas centradas para el botón de inicio
+x_inicio = (ancho - boton_rect.width) // 2
+y_inicio = (alto - boton_rect.height) // 2
+
+# Calcular las coordenadas para el botón de niveles a la izquierda del botón de inicio
+x_niveles = x_inicio - boton_rect.width - 120  # 10 píxeles de espacio entre los botones
+y_niveles = y_inicio
+
+# Calcular las coordenadas para el botón de salir a la derecha del botón de inicio
+x_salir = x_inicio + boton_rect.width + 120  # 10 píxeles de espacio entre los botones
+y_salir = y_inicio
+
+# Actualizar las posiciones de los rectángulos
+boton_rect.topleft = (x_inicio, y_inicio)
+niveles_rect = imagen_niveles.get_rect(topleft=(x_niveles, y_niveles))
+salir_rect = imagen_salir.get_rect(topleft=(x_salir, y_salir))
+
+def mostrar_menu_niveles():
+    niveles = ["Nivel 1", "Nivel 2", "Nivel 3"]
+    fuente = pg.font.Font(None, 36)
+    corriendo = True
+
+    while corriendo:
+        for evento in pg.event.get():
+            if evento.type == pg.QUIT:
+                pg.quit()
+                exit()
+            elif evento.type == pg.MOUSEBUTTONDOWN:
+                for i, nivel in enumerate(niveles):
+                    nivel_rect = pg.Rect(100, 100 + i * 50, 200, 40)
+                    if nivel_rect.collidepoint(evento.pos):
+                        print(f"{nivel} seleccionado")
+                        corriendo = False
+                        break
+                volver_rect = pg.Rect(100, 100 + len(niveles) * 50, 200, 40)
+                if volver_rect.collidepoint(evento.pos):
+                    corriendo = False
+
+        Menu.fill((0, 0, 0))
+        for i, nivel in enumerate(niveles):
+            nivel_texto = fuente.render(nivel, True, (255, 255, 255))
+            Menu.blit(nivel_texto, (100, 100 + i * 50))
+        volver_texto = fuente.render("Volver", True, (255, 255, 255))
+        Menu.blit(volver_texto, (100, 100 + len(niveles) * 50))
+
+        pg.display.flip()
+
+# Bucle principal del menú
 corriendo = True
 while corriendo:
     for evento in pg.event.get():
@@ -26,299 +79,24 @@ while corriendo:
             corriendo = False
         elif evento.type == pg.MOUSEBUTTONDOWN:
             if boton_rect.collidepoint(evento.pos):
-                pg.init()
+                print("Botón de inicio oprimido")
+            elif niveles_rect.collidepoint(evento.pos):
+                print("Botón de niveles oprimido")
+                mostrar_menu_niveles()
+            elif salir_rect.collidepoint(evento.pos):
+                print("Botón de salir oprimido")
+                corriendo = False
+    
+    if not corriendo:
+        break
 
-
-            #Pantalla o Ventana
-            w,h=(1000,600)
-            PANTALLA = pg.display.set_mode((w,h))
-            FPS = 50
-            RELOJ = pg.time.Clock()
-            # Colores
-            COLOR_VIDA = (0,255,0)  # Rojo
-            COLOR_FONDO_VIDA = (255,0,0)  # Blanco
-
-            # Variables de vida
-            vida_maxima = 100
-            vida_actual = 100
-            # Variables de vida de Spider
-            vida_maxima_spider = 5
-            vida_actual_spider = vida_maxima_spider
-
-
-            def detectar_colision(rect1, rect2):
-                return rect1.colliderect(rect2)
-
-            def dibujar_barra_vida(x, y, vida, vida_max):
-                # Dimensiones de la barra de vida
-                ancho, alto = 200, 20
-                fill = (vida / vida_max) * ancho
-                borde = pg.Rect(25, 10, ancho, alto)
-                fill_rect = pg.Rect(25, 10, fill, alto)
-                
-                pg.draw.rect(PANTALLA, COLOR_FONDO_VIDA, borde)
-                pg.draw.rect(PANTALLA, COLOR_VIDA, fill_rect)
-                pg.draw.rect(PANTALLA, (0,0,0), borde, 2)  # Dibuja el borde
-
-
-
-            def dibujar_barra_vidaSpider(x, y, vida_actual, vida_maxima):
-                largo_barra = 200
-                ancho_barra = 20
-                relleno = (vida_actual / vida_maxima) * largo_barra
-                borde = pg.Rect(x, y, largo_barra, ancho_barra)
-                relleno = pg.Rect(x, y, relleno, ancho_barra)
-                pg.draw.rect(PANTALLA, (0, 255, 0), relleno)
-                pg.draw.rect(PANTALLA, (255, 255, 255), borde, 2)
-
-            class Spider:
-                def __init__(self, x, y):
-                    self.x = x
-                    self.y = y
-                    self.cuentaPasos = 0
-                    self.direccion = 1  # 1 para derecha, -1 para izquierda
-                    self.velocidad_animacion = 15  # Controla la velocidad de la animación
-                    self.contador_animacion = 0
-                    self.ancho = 64  # Asume que la imagen tiene 64 píxeles de ancho
-                    self.alto = 64  # Asume que la imagen tiene 64 píxeles de alto
-
-                def mover(self):
-                    # Movimiento simple de izquierda a derecha
-                    self.x += self.direccion
-                    if self.x <= 0 or self.x >= 800 - 64:  # Asume que la imagen tiene 64 píxeles de ancho
-                        self.direccion *= -1
-
-                def dibujar(self, pantalla):
-                    pantalla.blit(FramesSpider[self.cuentaPasos // 1 % len(FramesSpider)], (self.x, self.y))
-                    self.contador_animacion += 1
-                    if self.contador_animacion >= self.velocidad_animacion:
-                        self.cuentaPasos += 1
-                        self.contador_animacion = 0
-                    if self.cuentaPasos >= len(FramesSpider):
-                        self.cuentaPasos = 0
-                def obtener_rect(self):
-                    return pg.Rect(self.x, self.y, self.ancho, self.alto)
-
-            class ObjetoColision:
-                def __init__(self, x, y, ancho, alto, velocidad):
-                    self.x = x
-                    self.y = y
-                    self.ancho = ancho
-                    self.alto = alto
-                    self.velocidad = velocidad
-                    self.cuentaPasos = 0
-                    self.contador_animacion = 0
-
-                def mover(self):
-                    self.x += self.velocidad
-
-                def dibujar(self, pantalla):
-                    pantalla.blit(animacion_objeto[self.cuentaPasos // 1 % len(animacion_objeto)], (self.x, self.y))
-                    self.contador_animacion += 1
-                    if self.contador_animacion >= 5:  # Ajusta la velocidad de la animación según sea necesario
-                        self.cuentaPasos += 1
-                        self.contador_animacion = 0
-                    if self.cuentaPasos >= len(animacion_objeto):
-                        self.cuentaPasos = 0
-
-                def obtener_rect(self):
-                    return pg.Rect(self.x, self.y, self.ancho, self.alto)
-
-
-
-            #Fondo del juego
-            fondo=pg.image.load("Imagenes\\FondoJuego_resized.jpg").convert()
-
-            #Personaje 1
-            #Imagenes Movimiento
-            Mderecha=[pg.image.load('Personajes\\Personaje1\\Derecho1.png'),
-                    pg.image.load('Personajes\\Personaje1\\Derecho2.png'),
-                    pg.image.load('Personajes\\Personaje1\\Derecho3.png'),
-                    pg.image.load('Personajes\\Personaje1\\Derecho4.png')]
-
-            SaltoMovimiento= [pg.image.load('Personajes\\Personaje1\\Salto4.png')]
-
-            MIzquierda=[pg.image.load('Personajes\\Personaje1\\Izquierdo1.png'),
-                        pg.image.load('Personajes\\Personaje1\\Izquierdo2.png'),
-                        pg.image.load('Personajes\\Personaje1\\Izquierdo3.png'),
-                        pg.image.load('Personajes\\Personaje1\\Izquierdo4.png')]
-
-            framesAtaque = [pg.image.load('Personajes\\Personaje1\\Derecho1.png'),
-                            pg.image.load('Personajes\\Personaje1\\Ataque2.png'),
-                            pg.image.load('Personajes\\Personaje1\\Derecho1.png')]
-            animacion_objeto = [pg.image.load(f'Personajes\Personaje1\Animacion Ataque.png') for i in range(1, 6)]
-
-            Quieto = pg.image.load('Personajes\\Personaje1\\Derecho1.png')
-
-            #Spider
-            FramesSpider = [pg.image.load('Personajes\Enemigo1\Spider1.png'),
-                        pg.image.load('Personajes\Enemigo1\Spider2.png'),
-                        pg.image.load('Personajes\Enemigo1\Spider3.png'),]
-            #Variables
-            x=0
-            px=50
-            py=200
-            ancho = 40
-            velocidad = 10
-            velocidad_animacion = 50
-            # Crear una instancia del personaje Spider
-            spider = Spider(600, 145)
-            objetos_colision = []
-            ancho, alto = 64, 64
-
-            #Variables de Salto
-            salto = False
-            #Altura del salto 
-            cuentaSalto = 10
-            #Variables de direccion
-            Derecha = False
-            Izquierda = False
-            Ataque = False
-            #Pasos
-            cuentaPasos = 0
-            indiceAtaque = 0
-            velocidadAtaque = 5
-
-            #Movimiento
-            def recargarPantalla():
-                global cuentaPasos
-                global x
-
-                # Fondo en movimiento
-                x_relativa = x % fondo.get_rect().width
-                PANTALLA.blit(fondo, (x_relativa - fondo.get_rect().width, 0))
-                if x_relativa < w:
-                    PANTALLA.blit(fondo, (x_relativa, 0))
-                x -= 1
-
-                dibujar_barra_vida(50, 50, vida_actual, vida_maxima)
-                dibujar_barra_vidaSpider(750, 25, vida_actual_spider, vida_maxima_spider)  # Barra de vida de Spider
-                spider.dibujar(PANTALLA)
-                for objeto in objetos_colision:
-                    objeto.dibujar(PANTALLA)
-
-                # Contador de pasos actualizado para todas las direcciones
-                if cuentaPasos + 1 >= 6:
-                    cuentaPasos = 0
-
-                # Movimiento a la Izquierda
-                if Izquierda:
-                    PANTALLA.blit(MIzquierda[cuentaPasos // 1 % len(MIzquierda)], (int(px), int(py)))
-                    cuentaPasos += 1
-                elif Derecha:
-                    PANTALLA.blit(Mderecha[cuentaPasos // 1 % len(Mderecha)], (int(px), int(py)))
-                    cuentaPasos += 1
-                elif Ataque:  # Si Ataque es True, asegúrate de que esta condición se refiera a si el personaje está atacando
-                    PANTALLA.blit(framesAtaque[cuentaPasos // 1 % len(framesAtaque)], (int(px), int(py)))
-                    cuentaPasos += 1
-                else:
-                    PANTALLA.blit(Quieto, (int(px), int(py)))
-
-                pg.display.update()
-
-            # Variable para controlar el bucle del juego
-            ejecuta = True
-
-            # Bucle principal del juego
-            while ejecuta:
-                RELOJ.tick(FPS)
-                if vida_actual <= 0:
-                    
-                    print("Has muerto")
-                    # Mostrar mensaje en pantalla
-                    fuente = pg.font.Font(None, 74)
-                    texto = fuente.render("Has muerto", True, (255, 0, 0))
-                    PANTALLA.blit(texto, (PANTALLA.get_width() // 2 - texto.get_width() // 2, PANTALLA.get_height() // 2 - texto.get_height() // 2))
-                    pg.display.flip()
-                    pg.time.wait(3000)  # Esperar 3 segundos antes de cerrar
-                    ejecuta = False
-                elif vida_actual_spider <= 0:
-                    
-                    print("Has ganado")
-                    # Mostrar mensaje en pantalla
-                    fuente = pg.font.Font(None, 74)
-                    texto = fuente.render("Has ganado", True, (0, 255, 0))
-                    PANTALLA.blit(texto, (PANTALLA.get_width() // 2 - texto.get_width() // 2, PANTALLA.get_height() // 2 - texto.get_height() // 2))
-                    pg.display.flip()
-                    pg.time.wait(3000)  # Esperar 3 segundos antes de cerrar
-                    ejecuta = False 
-                # Bucle del Juego
-                for event in pg.event.get():
-                    if event.type == pg.QUIT:
-                        ejecuta = False
-                    elif event.type == pg.KEYDOWN:
-                        if event.key == pg.K_v and Derecha == False and Izquierda == False :  # Cambiado de K_SPACE a K_v
-                            # Crear un nuevo objeto de colisión
-                            nuevo_objeto = ObjetoColision(px + ancho, py + alto // 4 + 40, 10, 40, 10)
-                            objetos_colision.append(nuevo_objeto)
-                            
-
-                # Teclas presionadas
-                keys = pg.key.get_pressed()
-                # Tecla A-Movimiento a la Izquierda
-                if keys[pg.K_a] and px > velocidad:
-                    px -= velocidad
-                    Izquierda = True
-                    Derecha = False
-
-                # Tecla D-Movimiento a la Derecha
-                elif keys[pg.K_d] and px < 900 - velocidad - ancho:
-                    px += velocidad
-                    Izquierda = False
-                    Derecha = True
-                    Ataque = False
-                    #Tecla Ataque
-                elif keys[pg.K_v] and px > 0:
-                    Ataque = True
-                    Izquierda = False 
-                    Derecha  = False
-                # Personaje Quieto
-                else:
-                    Izquierda = False
-                    Derecha = False
-                    cuentaPasos = 0
-                # Tecla W-Salto
-                if not (salto):
-                    if keys[pg.K_SPACE]:
-                        salto = True
-                        Izquierda = False
-                        Derecha = False
-                        cuentaPasos = 0
-                else:
-                    if cuentaSalto >= -10:
-                        py -= (cuentaSalto * abs(cuentaSalto)) * 0.5
-                        cuentaSalto -= 1
-                    else:
-                        cuentaSalto = 10
-                        salto = False
-
-                # Movimiento de los objetos de colisión
-                for objeto in objetos_colision:
-                    objeto.mover()
-
-                # Detectar colisión con Spider
-                rect_personaje = pg.Rect(px, py, ancho, alto)
-                rect_spider = pg.Rect(spider.x, spider.y, spider.ancho, spider.alto)
-                if detectar_colision(rect_personaje, rect_spider):
-                    vida_actual -= 1  # Reducir vida en 1
-                
-                # Detectar colisión de objetos con Spider
-                for objeto in objetos_colision:
-                    rect_objeto = pg.Rect(objeto.x, objeto.y, objeto.ancho, objeto.alto)
-                    if detectar_colision(rect_objeto, rect_spider):
-                        vida_actual_spider -= 1  # Reducir vida de Spider en 1
-                        objetos_colision.remove(objeto)  # Eliminar objeto tras colisión
-
-                recargarPantalla()
-
-            # Salida del Juego
-            pg.quit()
-
-    # Dibujar la imagen de fondo
+    # Dibujar el fondo en la ventana del menú
     Menu.blit(fondo, (0, 0))
 
-    # Dibujar el botón
-    pg.draw.rect(Menu, boton_color, boton_rect)
+    # Dibujar las imágenes de los botones
+    Menu.blit(imagen_boton, boton_rect.topleft)
+    Menu.blit(imagen_niveles, niveles_rect.topleft)
+    Menu.blit(imagen_salir, salir_rect.topleft)
 
     # Actualizar la pantalla
     pg.display.flip()
