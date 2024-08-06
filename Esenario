@@ -20,15 +20,24 @@ image7 = pygame.image.load('Imagenes\\Escenario7.png')
 image8 = pygame.image.load('Imagenes\\Escenario8.png')
 image9 = pygame.image.load('Imagenes\\Escenario9.png')
 image10 = pygame.image.load('Imagenes\\Escenario10.png')
-image11 = pygame.image.load('Imagenes\\Escenario11.png')
-image12 = pygame.image.load('Imagenes\\Escenario12.png')
 
+# Cargar imágenes de la animación del personaje
+character_images = [
+    pygame.image.load('Personajes\\Personaje2\\run_1.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_2.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_3.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_4.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_5.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_6.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_7.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_8.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_9.png'),
+    pygame.image.load('Personajes\\Personaje2\\run_10.png')
+]
 
-# ... carga más imágenes según sea necesario
-
-# Posiciones para las imágenes
-pos1 = (0, -90)  # Coordenadas (x, y) para la imagen 1
-pos2 = (0, -95)  # Coordenadas (x, y) para la imagen 2
+# Posiciones para las imágenes del escenario
+pos1 = (0, -90)
+pos2 = (0, -95)
 pos3 = (0, -80)
 pos4 = (0, -98)
 pos5 = (0, -98)
@@ -37,10 +46,22 @@ pos7 = (0, -98)
 pos8 = (0, -98)
 pos9 = (0, -98)
 pos10 = (0, -98)
-#pos11 = (0, -98)
-#pos12 = (0, -98)
 
-# ... define más posiciones según sea necesario
+# Posición inicial del personaje
+character_x = 0
+character_y = 500
+character_speed = 5
+
+# Variables para la animación
+character_frame = 0
+frame_delay = 1
+frame_count = 0
+
+# Variables para el salto
+is_jumping = False
+jump_speed = 15
+gravity = 2.5
+jump_velocity = jump_speed
 
 # Bucle principal del juego
 running = True
@@ -49,9 +70,42 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    # Manejar el movimiento del personaje
+    keys = pygame.key.get_pressed()
+    moving = False
+    flipped = False
+    if keys[pygame.K_LEFT]:
+        character_x -= character_speed
+        moving = True
+        flipped = True
+    if keys[pygame.K_RIGHT]:
+        character_x += character_speed
+        moving = True
+        flipped = False
+    if keys[pygame.K_SPACE] and not is_jumping:
+        is_jumping = True
+        jump_velocity = -jump_speed
+
+    # Manejar el salto
+    if is_jumping:
+        character_y += jump_velocity
+        jump_velocity += gravity
+        if character_y >= 500:
+            character_y = 500
+            is_jumping = False
+            jump_velocity = jump_speed
+
+    # Actualizar el cuadro de la animación solo si el personaje se está moviendo
+    if moving:
+        frame_count += 1
+        if frame_count >= frame_delay:
+            frame_count = 0
+            character_frame = (character_frame + 1) % len(character_images)
+    else:
+        # Resetear al cuadro inicial si el personaje no se mueve
+        character_frame = 0
+
     # Dibujar imágenes en la pantalla
-    #screen.blit(image11, pos11)
- #   screen.blit(image12, pos12)
     screen.blit(image10, pos10)
     screen.blit(image2, pos2)
     screen.blit(image1, pos1)
@@ -63,9 +117,11 @@ while running:
     screen.blit(image8, pos8)
     screen.blit(image4, pos4)
     
-
-    
-    # ... dibuja más imágenes según sea necesario
+    # Dibujar el personaje con la animación
+    character_image = character_images[character_frame]
+    if flipped:
+        character_image = pygame.transform.flip(character_image, True, False)
+    screen.blit(character_image, (character_x, character_y))
 
     # Actualizar la pantalla
     pygame.display.flip()
