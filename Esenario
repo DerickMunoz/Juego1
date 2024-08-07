@@ -10,19 +10,24 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Escenario en Pygame")
 
 # Cargar imágenes del escenario
-image1 = pygame.image.load('Imagenes\\Escenario1.png')
-image2 = pygame.image.load('Imagenes\\Escenario2.png')
-image3 = pygame.image.load('Imagenes\\Escenario3.png')
-image4 = pygame.image.load('Imagenes\\Escenario4.png')
-image5 = pygame.image.load('Imagenes\\Escenario5.png')
-image6 = pygame.image.load('Imagenes\\Escenario6.png')
-image7 = pygame.image.load('Imagenes\\Escenario7.png')
-image8 = pygame.image.load('Imagenes\\Escenario8.png')
-image9 = pygame.image.load('Imagenes\\Escenario9.png')
-image10 = pygame.image.load('Imagenes\\Escenario10.png')
+images = [
+    pygame.image.load('Imagenes\\Escenario1.png'),
+    pygame.image.load('Imagenes\\Escenario2.png'),
+    pygame.image.load('Imagenes\\Escenario3.png'),
+    pygame.image.load('Imagenes\\Escenario4.png'),
+    pygame.image.load('Imagenes\\Escenario5.png'),
+    pygame.image.load('Imagenes\\Escenario6.png'),
+    pygame.image.load('Imagenes\\Escenario7.png'),
+    pygame.image.load('Imagenes\\Escenario8.png'),
+    pygame.image.load('Imagenes\\Escenario9.png'),
+    pygame.image.load('Imagenes\\Escenario10.png')
+]
+
+# Posiciones iniciales de las imágenes del escenario
+initial_positions = [(0, -90), (0, -95), (0, -80), (0, -98), (0, -98), (0, -98), (0, -98), (0, -98), (0, -98), (0, -98)]
 
 # Cargar imágenes de la animación del personaje
-character_images = [
+character_run_images = [
     pygame.image.load('Personajes\\Personaje2\\run_1.png'),
     pygame.image.load('Personajes\\Personaje2\\run_2.png'),
     pygame.image.load('Personajes\\Personaje2\\run_3.png'),
@@ -35,27 +40,156 @@ character_images = [
     pygame.image.load('Personajes\\Personaje2\\run_10.png')
 ]
 
-# Posiciones para las imágenes del escenario
-pos1 = (0, -90)
-pos2 = (0, -95)
-pos3 = (0, -80)
-pos4 = (0, -98)
-pos5 = (0, -98)
-pos6 = (0, -98)
-pos7 = (0, -98)
-pos8 = (0, -98)
-pos9 = (0, -98)
-pos10 = (0, -98)
+character_attack1_images = [
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_1.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_2.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_3.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_4.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_5.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_6.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_7.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_8.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_9.png'),
+    pygame.image.load('Personajes\\Personaje2\\1_atk\\1_atk_10.png')
+]
+
+character_attack2_images = [
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_1.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_2.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_3.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_4.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_5.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_6.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_7.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_8.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_9.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_10.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_11.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_12.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_13.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_14.png'),
+    pygame.image.load('Personajes\\Personaje2\\2_atk\\2_atk_15.png')
+]
+
+character_attack3_images = [
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_1.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_2.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_3.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_4.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_5.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_6.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_7.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_8.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_9.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_10.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_11.png'),
+    pygame.image.load('Personajes\\Personaje2\\3_atk\\3_atk_12.png')
+]
+
+# Cargar imágenes de la animación del enemigo
+enemy_run_images = [
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_1.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_2.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_3.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_4.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_5.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_6.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_7.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_8.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_9.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_10.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_11.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_run\\demon_walk_12.png')
+]
+
+enemy_attack_images = [
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk1.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk2.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk3.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk4.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk5.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk6.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk7.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk8.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk9.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk10.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk11.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk12.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk13.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk14.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_atk\\demon_atk15.png'),
+]
+
+# Imágenes de derrota
+character_defeat_images = [
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_1.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_2.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_3.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_4.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_5.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_6.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_7.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_8.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_9.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_10.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_11.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_12.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_13.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_14.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_15.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_16.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_17.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_18.png'),
+    pygame.image.load('Personajes\\Personaje2\\Derrota_P\\death_19.png')
+]
+
+enemy_defeat_images = [
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_1.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_2.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_3.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_4.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_5.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_6.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_7.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_8.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_9.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_10.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_11.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_12.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_13.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_14.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_15.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_16.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_17.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_18.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_19.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_20.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_21.png'),
+    pygame.image.load('Personajes\\Enemigo2\\Demonio_drt\\demon_death_22.png'),
+]
 
 # Posición inicial del personaje
-character_x = 0
+character_x = WIDTH // 200
 character_y = 500
 character_speed = 5
+character_health = 100  # Salud del personaje
+
+# Posición inicial del enemigo
+enemy_x = WIDTH - 200
+enemy_y = 500
+enemy_speed = 3
+enemy_health = 100  # Salud del enemigo
 
 # Variables para la animación
 character_frame = 0
-frame_delay = 1
+character_attack_frame = 0
+frame_delay = 10
 frame_count = 0
+is_attacking = False
+attack_type = 1  # Tipo de ataque inicial
+
+enemy_frame = 0
+enemy_attack_frame = 0
 
 # Variables para el salto
 is_jumping = False
@@ -63,8 +197,19 @@ jump_speed = 15
 gravity = 2.5
 jump_velocity = jump_speed
 
+# Variables para animación de derrota
+character_defeat_frame = 0
+enemy_defeat_frame = 0
+is_defeated = False
+enemy_defeated = False
+
 # Bucle principal del juego
 running = True
+
+def draw_health_bar(x, y, health):
+    pygame.draw.rect(screen, (255, 0, 0), (x, y, 100, 10))
+    pygame.draw.rect(screen, (0, 255, 0), (x, y, health, 10))
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -74,17 +219,26 @@ while running:
     keys = pygame.key.get_pressed()
     moving = False
     flipped = False
-    if keys[pygame.K_LEFT]:
+    if keys[pygame.K_LEFT] and not is_defeated:
         character_x -= character_speed
         moving = True
         flipped = True
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_RIGHT] and not is_defeated:
         character_x += character_speed
         moving = True
         flipped = False
-    if keys[pygame.K_SPACE] and not is_jumping:
+    if keys[pygame.K_SPACE] and not is_jumping and not is_defeated:
         is_jumping = True
         jump_velocity = -jump_speed
+    if keys[pygame.K_a] and not is_defeated:  # Ataque con la tecla 'A'
+        is_attacking = True
+        character_attack_frame = 0
+    if keys[pygame.K_1] and not is_defeated:  # Cambiar al ataque 1
+        attack_type = 1
+    if keys[pygame.K_2] and not is_defeated:  # Cambiar al ataque 2
+        attack_type = 2
+    if keys[pygame.K_3] and not is_defeated:  # Cambiar al ataque 3
+        attack_type = 3
 
     # Manejar el salto
     if is_jumping:
@@ -96,36 +250,79 @@ while running:
             jump_velocity = jump_speed
 
     # Actualizar el cuadro de la animación solo si el personaje se está moviendo
-    if moving:
+    if moving and not is_defeated:
         frame_count += 1
         if frame_count >= frame_delay:
             frame_count = 0
-            character_frame = (character_frame + 1) % len(character_images)
+            character_frame = (character_frame + 1) % len(character_run_images)
     else:
         # Resetear al cuadro inicial si el personaje no se mueve
         character_frame = 0
 
+    # Actualizar la animación de ataque si el personaje está atacando
+    if is_attacking and not is_defeated:
+        frame_count += 1
+        if frame_count >= frame_delay:
+            frame_count = 0
+            character_attack_frame = (character_attack_frame + 1) % len(character_attack1_images)
+            if character_attack_frame == 0:
+                is_attacking = False
+
+    # Actualizar la animación del enemigo
+    if not enemy_defeated:
+        enemy_frame = (enemy_frame + 1) % len(enemy_run_images)
+
+    # Lógica del ataque del enemigo
+    if not enemy_defeated:
+        if enemy_x < character_x + 100 and enemy_x + 100 > character_x:
+            if enemy_frame % len(enemy_attack_images) == 0:
+                character_health -= 1  # Ataque básico del enemigo
+                if character_health <= 0:
+                    is_defeated = True
+
+    # Verificar si el enemigo ha sido derrotado
+    if enemy_health <= 0 and not enemy_defeated:
+        enemy_defeated = True
+
     # Dibujar imágenes en la pantalla
-    screen.blit(image10, pos10)
-    screen.blit(image2, pos2)
-    screen.blit(image1, pos1)
-    screen.blit(image3, pos3)
-    screen.blit(image9, pos9)
-    screen.blit(image5, pos5)
-    screen.blit(image6, pos6)
-    screen.blit(image7, pos7)
-    screen.blit(image8, pos8)
-    screen.blit(image4, pos4)
-    
+    screen.fill((0, 0, 0))  # Rellenar el fondo de negro
+    for i, img in enumerate(images):
+        pos = initial_positions[i]
+        screen.blit(img, pos)
+
     # Dibujar el personaje con la animación
-    character_image = character_images[character_frame]
+    if is_attacking:
+        if attack_type == 1:
+            character_image = character_attack1_images[character_attack_frame]
+        elif attack_type == 2:
+            character_image = character_attack2_images[character_attack_frame]
+        elif attack_type == 3:
+            character_image = character_attack3_images[character_attack_frame]
+    else:
+        character_image = character_run_images[character_frame]
     if flipped:
         character_image = pygame.transform.flip(character_image, True, False)
     screen.blit(character_image, (character_x, character_y))
 
+    # Dibujar la barra de vida del personaje en la parte superior
+    draw_health_bar(20, 20, character_health)
+
+    # Dibujar el enemigo con la animación
+    if not enemy_defeated:
+        enemy_image = enemy_run_images[enemy_frame]
+        screen.blit(enemy_image, (enemy_x, enemy_y))
+
+    # Dibujar la barra de vida del enemigo en la parte superior
+    draw_health_bar(WIDTH - 120, 20, enemy_health)
+
     # Actualizar la pantalla
     pygame.display.flip()
+
+    # Mantener los personajes dentro de los márgenes del escenario
+    character_x = max(0, min(character_x, WIDTH - 100))
+    enemy_x = max(0, min(enemy_x, WIDTH - 100))
 
 # Salir de Pygame
 pygame.quit()
 sys.exit()
+
